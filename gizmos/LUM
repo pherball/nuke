@@ -1,0 +1,15 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+push $cut_paste_input
+Expression {
+temp_name0 lum
+temp_expr0 r*.2126+g*.7152+b*.0722
+expr0 lum
+expr1 lum
+expr2 lum
+expr3 lum
+name LUM_Expression1
+selected true
+xpos -1141
+ypos 16818
+}
