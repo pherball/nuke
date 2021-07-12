@@ -1,0 +1,142 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+push $cut_paste_input
+Unpremult {
+name Unpremult15
+selected true
+xpos -590
+ypos 16598
+}
+Dot {
+name Dot183
+note_font_size 100
+selected true
+xpos -556
+ypos 16650
+}
+set N190a5130 [stack 0]
+Dot {
+name Dot184
+note_font_size 100
+selected true
+xpos -666
+ypos 16650
+}
+Dot {
+name Dot185
+note_font_size 100
+selected true
+xpos -666
+ypos 16794
+}
+push $N190a5130
+Group {
+inputs 2
+name colorFrom14
+selected true
+xpos -590
+ypos 16790
+}
+Input {
+inputs 0
+name hue
+xpos -590
+ypos -681
+number 1
+}
+Dot {
+name Dot54
+note_font_size 100
+xpos -556
+ypos -534
+}
+set N18b4e090 [stack 0]
+Dot {
+name Dot55
+note_font_size 100
+xpos -666
+ypos -534
+}
+Dot {
+name Dot53
+note_font_size 100
+xpos -666
+ypos -390
+}
+push $N18b4e090
+Saturation {
+saturation 0
+name Saturation1
+xpos -590
+ypos -442
+}
+Merge2 {
+inputs 2
+operation divide
+name Merge29
+label "bbox|\[value bbox]"
+xpos -590
+ypos -400
+}
+Dot {
+name Dot57
+note_font_size 100
+xpos -556
+ypos -294
+}
+Input {
+inputs 0
+name lum
+xpos -480
+ypos -681
+}
+Dot {
+name Dot56
+note_font_size 100
+xpos -446
+ypos -534
+}
+Saturation {
+saturation 0
+name Saturation2
+xpos -480
+ypos -442
+}
+Merge2 {
+inputs 2
+operation multiply
+bbox B
+name Merge122
+xpos -480
+ypos -298
+}
+set N18c0fed0 [stack 0]
+Output {
+name Output1
+xpos -480
+ypos 38
+}
+push $N18c0fed0
+push 0
+Viewer {
+inputs 2
+frame_range 1041-1276
+frame_increment 3
+input_number 1
+overscan 300
+center_fstop 0
+viewerProcess Film
+far 100000
+name Viewer1
+tile_color 0xffff00ff
+xpos 70
+ypos -9
+hide_input true
+}
+end_group
+Premult {
+name Premult2
+selected true
+xpos -590
+ypos 16838
+}
