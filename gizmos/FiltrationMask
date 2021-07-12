@@ -1,0 +1,141 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+CheckerBoard2 {
+inputs 0
+boxsize 1
+color0 {1 1 1 1}
+color1 {0 0 0 0}
+color2 {1 1 1 1}
+color3 {0 0 0 0}
+centerlinewidth 0
+name Filtration_CheckerBoard
+selected true
+xpos -1140
+ypos 16742
+postage_stamp false
+}
+Invert {
+channels {-rgba.red rgba.green -rgba.blue none}
+name Filtration_Invert
+selected true
+xpos -1140
+ypos 16790
+}
+Dot {
+name Dot183
+note_font_size 100
+selected true
+xpos -1106
+ypos 16890
+}
+push 0
+add_layer {filtration filtration.red filtration.green}
+Copy {
+inputs 2
+from0 rgba.red
+to0 filtration.red
+from1 rgba.green
+to1 filtration.green
+name Filtration_Copy
+selected true
+xpos -920
+ypos 16874
+}
+Dot {
+name Dot184
+selected true
+xpos -886
+ypos 16986
+}
+set N1498cfe0 [stack 0]
+Dot {
+name Dot185
+note_font_size 100
+selected true
+xpos -776
+ypos 16986
+}
+set Nb70c0030 [stack 0]
+Shuffle {
+in filtration
+green red
+blue red
+alpha red
+name FiltrationR_Shuffle
+label RRRR
+selected true
+xpos -810
+ypos 17018
+}
+Dot {
+name Dot186
+note_font_size 100
+selected true
+xpos -776
+ypos 17082
+}
+push $Nb70c0030
+Dot {
+name Dot187
+note_font_size 100
+selected true
+xpos -666
+ypos 16986
+}
+Shuffle {
+in filtration
+red green
+blue green
+alpha green
+name FiltrationG_Shuffle
+label GGGG
+selected true
+xpos -700
+ypos 17018
+}
+Merge2 {
+inputs 2
+operation min
+name Min2
+selected true
+xpos -700
+ypos 17078
+}
+Multiply {
+value 2
+name Multiply12
+selected true
+xpos -700
+ypos 17120
+}
+Dot {
+name Dot188
+note_font_size 100
+selected true
+xpos -666
+ypos 17178
+}
+push $N1498cfe0
+Dot {
+name Dot189
+note_font_size 100
+selected true
+xpos -1106
+ypos 16986
+}
+Dot {
+name Dot190
+note_font_size 100
+selected true
+xpos -1106
+ypos 17178
+}
+push $N1498cfe0
+Keymix {
+inputs 3
+name Keymix5
+label "bbox|\[value bbox]"
+selected true
+xpos -920
+ypos 17162
+}
