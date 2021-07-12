@@ -26,7 +26,7 @@ def DisableGui():
         except:
             pass
 
-#GUI TOGGLE
+# GUI TOGGLE
 def guiToggle():
     for n in nuke.selectedNodes(): 
         try: 
@@ -38,7 +38,7 @@ def guiToggle():
                 k.setValue(False)
         except:
             pass
-
+# SET BBOX TO B
 def bboxB():
     for a in nuke.selectedNodes():
         classTypes = ['Merge' , 'Keymix', 'Copy', ]
@@ -47,13 +47,12 @@ def bboxB():
                 for p in a['bbox'].values():
                     if 'B' in p:
                         a['bbox'].setValue(a['bbox'].values().index(p))
-
-
-#OPEN PROPERTIES
+                        
+# OPEN PROPERTIES
 def openProp():
     for n in nuke.selectedNodes():
         nuke.show(n)
-#CLOSE PROPERTIES
+# CLOSE PROPERTIES
 def closeProp():
     for n in nuke.allNodes() + [nuke.root(), ]: 
         n.hideControlPanel()
@@ -62,7 +61,7 @@ m = nuke.menu('Nuke')
 n = nuke.menu('Nodes')
 s = nuke.menu('Nuke').addMenu('CMI')
 
-#RELOAD SELECTED
+# RELOAD SELECTED
 def reloadSelected():
     for n in nuke.selectedNodes():
         if n.Class() in ('Read', 'Group'):
@@ -71,7 +70,7 @@ def reloadSelected():
             except:
                 pass
 
-#DEFAULT HOTKEY CHANGE
+# DEFAULT HOTKEY CHANGE
 def snapAll():
     n = nuke.allNodes();
     for i in n:
@@ -81,20 +80,18 @@ def snapSel():
     for i in n:
       nuke.autoplaceSnap(i)
 
-
-
-
-#BACKWARD INCREMENT
+    
+# BACKWARD INCREMENT
 m.addCommand('CMI/Hotkey/BACK3', 'nuke.activeViewer().frameControl(-2)',"#Q")
-#FORWARD INCREMENT
+# FORWARD INCREMENT
 m.addCommand('CMI/Hotkey/FORWARD3', 'nuke.activeViewer().frameControl(2)',"#W")
-#BACKWARD 1 FRAME
+# BACKWARD 1 FRAME
 m.addCommand('CMI/Hotkey/BACK1', 'nuke.activeViewer().frameControl(-1)',"F1")
-#FORWARD 1 frame
+# FORWARD 1 frame
 m.addCommand('CMI/Hotkey/FORWARD1', 'nuke.activeViewer().frameControl(1)',"F2")
-#BACKWARD 1 KEY
+# BACKWARD 1 KEY
 m.addCommand('CMI/Hotkey/KEY-', 'nuke.activeViewer().frameControl(-4)',"#+Q")
-#FORWARD 1 KEY
+# FORWARD 1 KEY
 m.addCommand('CMI/Hotkey/KEY+', 'nuke.activeViewer().frameControl(4)',"#+W")
 
 
@@ -119,7 +116,6 @@ m.addCommand('CMI/Disable $GUI', 'DisableGui()')
 m.addCommand('CMI/Util/$gui Toggle', 'guiToggle()', '+D')
 
 m.addCommand('CMI/Hotkey/CC', 'nuke.loadToolset("/u/chmi/.nuke/ToolSets/CC.nk")', "Shift+C")
-
 
 
 import W_smartAlign
