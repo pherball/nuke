@@ -1,0 +1,46 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+push $cut_paste_input
+Group {
+name DoF_Setup1
+selected true
+xpos -1196
+ypos 16549
+addUserKnob {20 User}
+addUserKnob {7 ax1 l axis_01}
+ax1 {{"sqrt(pow(\[topnode input0].world_matrix.3-\[topnode input1].world_matrix.3, 2) + pow(\[topnode input0].world_matrix.7-\[topnode input1].world_matrix.7, 2) + pow(\[topnode input0].world_matrix.11-\[topnode input1].world_matrix.11, 2))"}}
+addUserKnob {7 ax2 l axis_02}
+ax2 {{"sqrt(pow(\[topnode input0].world_matrix.3-\[topnode input2].world_matrix.3, 2) + pow(\[topnode input0].world_matrix.7-\[topnode input2].world_matrix.7, 2) + pow(\[topnode input0].world_matrix.11-\[topnode input2].world_matrix.11, 2))"}}
+addUserKnob {7 mx l mix}
+addUserKnob {7 output}
+output {{lerp(ax1,ax2,mx)}}
+addUserKnob {7 f}
+f 4
+}
+Input {
+inputs 0
+name axis_01
+xpos 70
+ypos -9
+number 1
+}
+Input {
+inputs 0
+name axis_02
+xpos 180
+ypos -9
+number 2
+}
+Output {
+inputs 0
+name Output1
+xpos 70
+ypos 423
+}
+Input {
+inputs 0
+name c
+xpos -40
+ypos -9
+}
+end_group
