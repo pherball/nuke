@@ -1,0 +1,15 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+push $cut_paste_input
+DeepExpression {
+chans1 deep
+rgba.alpha "rgba.alpha * .99999"
+deep.front "deep.front - \[value soft]"
+deep.back "deep.back + \[value soft]"
+name SOFT_DeepExpression
+selected true
+xpos -1282
+ypos 16841
+addUserKnob {20 User}
+addUserKnob {7 soft}
+}
