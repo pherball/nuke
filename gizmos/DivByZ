@@ -1,0 +1,15 @@
+set cut_paste_input [stack 0]
+version 10.5 v7
+push $cut_paste_input
+Expression {
+temp_name0 d
+channel0 depth
+expr0 "rgba.alpha > 0.0001 ? 1/depth.Z : 0"
+channel1 none
+channel2 none
+channel3 none
+name DivByZ_Expression1
+selected true
+xpos -1239
+ypos 16646
+}
