@@ -1,0 +1,142 @@
+set cut_paste_input [stack 0]
+version 13.0 v1
+push $cut_paste_input
+Group {
+ name Density
+ help "Adjusts the density of the input image; best used with semi-transparent elements like smoke.\n\nUse \"Density to Alpha\" to convert a Z pass into a fog (sometimes you need a very low value)"
+ tile_color 0x78a4efff
+ selected true
+ xpos -954
+ ypos 364
+ addUserKnob {20 Density}
+ addUserKnob {26 ""}
+ addUserKnob {4 output l Output M {"Result (Mult)" "Alpha to Density" "Density to Alpha" ""}}
+ addUserKnob {6 _unpremult_ l unpremult +STARTLINE}
+ _unpremult_ true
+ addUserKnob {41 value T Mult_5.value}
+ addUserKnob {20 debug l Debug n 1}
+ debug 0
+ addUserKnob {7 densityMax l "Density Max" t "Use this when the alpha is clamped" R 1 20}
+ densityMax 16
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {41 maskChannel l "mask channel" T Keymix1.maskChannel}
+}
+ Input {
+  inputs 0
+  name mask
+  xpos 895
+  ypos 687
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 756
+  ypos 681
+ }
+ Input {
+  inputs 0
+  name src
+  xpos 402
+  ypos -44
+ }
+set Nb7da5800 [stack 0]
+ Dot {
+  name Dot5
+  xpos 187
+  ypos -40
+ }
+ Dot {
+  name Dot4
+  xpos 187
+  ypos 691
+ }
+push $Nb7da5800
+ Unpremult {
+  name Unpremult
+  xpos 402
+  ypos 72
+  disable {{!parent._unpremult_}}
+ }
+ Dot {
+  name Dot3
+  xpos 436
+  ypos 210
+ }
+set Nb7da4800 [stack 0]
+ Dot {
+  name Dot1
+  xpos 751
+  ypos 210
+ }
+ Multiply {
+  channels alpha
+  value {{parent.Mult_5.value}}
+  name Mult_1
+  label "x\[value value]"
+  xpos 717
+  ypos 366
+ }
+ Expression {
+  channel0 alpha
+  expr0 1-exp(-a)
+  name Density2Alpha2
+  xpos 717
+  ypos 472
+ }
+push $Nb7da4800
+ Expression {
+  temp_name0 Vdmax
+  temp_expr0 densityMax
+  channel0 alpha
+  expr0 a<1?-log(1-a):Vdmax
+  name Alpha2Density1
+  xpos 402
+  ypos 301
+ }
+ Multiply {
+  channels alpha
+  name Mult_5
+  label "x\[value value]"
+  xpos 402
+  ypos 368
+ }
+set Nb7d4f000 [stack 0]
+ Dot {
+  name Dot2
+  xpos 593
+  ypos 384
+ }
+push $Nb7d4f000
+ Expression {
+  channel0 alpha
+  expr0 1-exp(-a)
+  name Density2Alpha1
+  xpos 402
+  ypos 466
+ }
+ Switch {
+  inputs 3
+  which {{parent.output}}
+  name Switch1
+  xpos 559
+  ypos 533
+ }
+ Premult {
+  name Premult
+  xpos 559
+  ypos 635
+  disable {{!parent._unpremult_}}
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos 559
+  ypos 681
+ }
+ Output {
+  name Output1
+  xpos 559
+  ypos 782
+ }
+end_group
