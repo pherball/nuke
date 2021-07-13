@@ -1,0 +1,15 @@
+set cut_paste_input [stack 0]
+version 8.0 v5
+push $cut_paste_input
+Matrix {
+matrix {
+    {0 1 0}
+    {1 2 1}
+    {0 1 0}
+  }
+normalize true
+name AA_3x3
+selected true
+xpos -4940
+ypos -4302
+}
