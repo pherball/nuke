@@ -1,0 +1,78 @@
+set cut_paste_input [stack 0]
+version 13.0 v1
+push $cut_paste_input
+Group {
+ name UVRamp
+ help "Creates a uv ramp which is compatible with STMap."
+ selected true
+ xpos -187
+ ypos 418
+ addUserKnob {20 UVRamp}
+ addUserKnob {26 ""}
+ addUserKnob {30 overscan t "The scale multiplier for width/height to draw the ramp beyond the top/bottom and left/right of frame.\n\nThe expression by default in the <i>overscan.v</i> knob will ensure that overscan in both dimensions is equal proportionally."}
+ overscan {0 {"overscan.u * this.Input1.width/this.Input1.height * this.Input1.pixel_aspect"}}
+ addUserKnob {41 output t "Draw the ramps into these two channels." T STMapKnobDummy.uv}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 365
+  ypos -618
+ }
+set Nbcdd4400 [stack 0]
+ Crop {
+  box {{"-(parent.overscan.u * width)/2"} {"-(parent.overscan.v * height)/2"} {"width + (width * parent.overscan.u)/2"} {"height + (height * parent.overscan.v)/2"}}
+  reformat true
+  crop false
+  name Crop1
+  xpos 365
+  ypos -568
+ }
+ Expression {
+  expr0 (x+.5)/width
+  expr1 (y+.5)/height
+  expr2 0
+  name Expression1
+  xpos 365
+  ypos -518
+ }
+ Reformat {
+  type "to box"
+  box_width {{Input1.width}}
+  box_height {{Input1.height}}
+  box_fixed true
+  resize none
+  pbb true
+  name Reformat2
+  label "shrink display window"
+  xpos 365
+  ypos -494
+  disable {{"parent.overscan.u == 0 && parent.overscan.v == 0"}}
+ }
+push $Nbcdd4400
+ Copy {
+  inputs 2
+  from0 -rgba.red
+  to0 -rgba.red
+  from1 -rgba.green
+  to1 -rgba.green
+  channels {rgba.red rgba.green -rgba.blue -rgba.alpha}
+  name Copy
+  xpos 509
+  ypos -500
+ }
+ Output {
+  name Output1
+  xpos 509
+  ypos -419
+ }
+ STMap {
+  inputs 0
+  uv rgb
+  name STMapKnobDummy
+  knobChanged "__import__(\"dnnuke.init.callbacks.knob_changed.uv_ramp\", fromlist=\[\"outputKC\"]).outputKC()"
+  label "knob dummy - don't delete"
+  xpos 503
+  ypos -615
+ }
+end_group
