@@ -1,0 +1,182 @@
+set cut_paste_input [stack 0]
+version 10.5 v1
+push $cut_paste_input
+Group {
+ name DespillToTexture1
+ selected true
+ xpos -6726
+ ypos 4284
+ addUserKnob {20 User l main}
+ addUserKnob {4 bluegreen l "screen type" M {blue green ""}}
+ bluegreen green
+ addUserKnob {18 screenColor l "screen color"}
+ screenColor {1 1 1}
+ addUserKnob {6 screenColor_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetColor_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 balance t "- determines which colors get more affected by the despill operation. Lower values work better for red tones. Higher values stronger affect blue and green tones." R 0 2}
+ balance 0.84
+ addUserKnob {7 gain t "Increasing gain will affect a wider range of colors." R 0.5 3.5}
+ gain 0.98
+ addUserKnob {26 ""}
+ addUserKnob {6 enableErode l enable +STARTLINE}
+ addUserKnob {7 erode t "For blurry edges, eroding the despill matte is an alternative to increasing the gain." R 0 50}
+ addUserKnob {7 erodeMix l mix}
+ erodeMix 1
+ addUserKnob {26 ""}
+ addUserKnob {7 falloff t "- controlls the gamma on the despill matte." R 0.5 1.5}
+ falloff 1
+ addUserKnob {26 ""}
+ addUserKnob {41 maskChannelMask l mask -STARTLINE T Merge1.maskChannelMask}
+ addUserKnob {41 inject -STARTLINE T Merge1.inject}
+ addUserKnob {41 invert_mask l invert -STARTLINE T Merge1.invert_mask}
+ addUserKnob {41 fringe -STARTLINE T Merge1.fringe}
+ addUserKnob {41 alpha l "(un)premult by" T Unpremult1.alpha}
+ addUserKnob {7 mix}
+ mix 1
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name source
+  xpos -84
+  ypos 12
+ }
+set Nc4bbb000 [stack 0]
+ Expression {
+  expr0 r
+  expr1 g
+  expr2 b
+  channel3 alpha
+  expr3 parent.bluegreen==0?(b*parent.gain-(r*parent.balance+g*(1-(parent.balance-1)))/2):(g*parent.gain-(r*parent.balance+b*(1-(parent.balance-1)))/2)
+  name Expression1
+  xpos 456
+  ypos 12
+ }
+ Grade {
+  channels alpha
+  whitepoint {{(parent.NoOp1.alphavalue*1.1)*(1-parent.bluegreen)+(parent.NoOp1.alphavalueGreen*1.1)*(parent.bluegreen)}}
+  name despillWhite
+  xpos 456
+  ypos 35
+ }
+ Clamp {
+  name Clamp1
+  xpos 456
+  ypos 73
+ }
+ FilterErode {
+  size {{-parent.erode}}
+  filter gaussian
+  mix {{parent.erodeMix}}
+  name despillGaussian
+  xpos 456
+  ypos 111
+  disable {{1-parent.enableErode}}
+ }
+ Grade {
+  channels alpha
+  gamma {{parent.falloff}}
+  black_clamp false
+  name falloff
+  xpos 456
+  ypos 149
+ }
+ Grade {
+  channels alpha
+  whitepoint {{parent.despillWhite.whitepoint}}
+  reverse true
+  name Grade4
+  xpos 456
+  ypos 187
+ }
+ Input {
+  inputs 0
+  name TargetColor
+  xpos 247
+  ypos -47
+  number 2
+ }
+ Expression {
+  expr0 parent.bluegreen==0?(r*(clamp(1/clamp(parent.NoOp1.alphavalue),0,100))-parent.screenColor.r*(clamp(1/clamp(parent.NoOp1.alphavalue),0,1000000))):(r*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,10000))-parent.screenColor.r*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,1000000)))
+  expr1 parent.bluegreen==0?(g*(clamp(1/clamp(parent.NoOp1.alphavalue),0,100))-parent.screenColor.g*(clamp(1/clamp(parent.NoOp1.alphavalue),0,1000000))):(g*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,10000))-parent.screenColor.g*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,1000000)))
+  expr2 parent.bluegreen==0?(b*(clamp(1/clamp(parent.NoOp1.alphavalue),0,100))-parent.screenColor.b*(clamp(1/clamp(parent.NoOp1.alphavalue),0,1000000))):(b*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,10000))-parent.screenColor.b*(clamp(1/clamp(parent.NoOp1.alphavalueGreen),0,1000000)))
+  expr3 1
+  name Expression4
+  xpos 247
+  ypos 83
+ }
+push $Nc4bbb000
+ Unpremult {
+  alpha -rgba.alpha
+  name Unpremult1
+  xpos 112
+  ypos 111
+ }
+ Merge2 {
+  inputs 2+1
+  operation plus
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge2
+  xpos 247
+  ypos 193
+ }
+ Premult {
+  alpha {{{parent.Unpremult1.alpha}}}
+  name Premult1
+  xpos 76
+  ypos 193
+ }
+set Nbb715c00 [stack 0]
+push 0
+ Viewer {
+  inputs 2
+  frame_range 1001-1159
+  input_number 1
+  colour_sample_bbox {-0.006444053724 -0.1241944954 -0.00585823087 -0.1236086711}
+  samplepoints {{-0.006444053724 -0.1241944954}
+    }
+  viewerProcess "ARRI 3D (default)"
+  input_process false
+  translate {0.1309999973 0.4580000043}
+  name Viewer1
+  xpos 154
+  ypos 397
+ }
+push $Nc4bbb000
+ NoOp {
+  name NoOp1
+  xpos 125
+  ypos 57
+  addUserKnob {20 User}
+  addUserKnob {7 alphavalueGreen}
+  alphavalueGreen {{(parent.screenColor.g*parent.gain)-((parent.screenColor.b*(1-(parent.balance-1))+parent.screenColor.r*parent.balance)/2)}}
+  addUserKnob {7 alphavalue l alphavalueBlue}
+  alphavalue {{(parent.screenColor.b*parent.gain)-((parent.screenColor.g*(1-(parent.balance-1))+parent.screenColor.r*parent.balance)/2)}}
+ }
+ Input {
+  inputs 0
+  name mask
+  xpos -234
+  ypos 193
+  number 1
+ }
+push $Nbb715c00
+push $Nc4bbb000
+ Merge2 {
+  inputs 2+1
+  operation copy
+  bbox B
+  maskChannelInput -rgba.alpha
+  mix {{parent.mix}}
+  name Merge1
+  xpos -84
+  ypos 193
+ }
+ Output {
+  name Output1
+  xpos -84
+  ypos 253
+ }
+end_group
