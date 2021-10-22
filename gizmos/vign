@@ -1,0 +1,121 @@
+egostudios.com
+
+set cut_paste_input [stack 0]
+version 10.0 v5
+push $cut_paste_input
+Group {
+ name egoVignette
+ help "Gizmo for creating physically plausible vignetting.\n\nThis node should allow for plenty of artistic adjustments, but is mainly intended to facilitate in matching the vignetting of photographical images. It applies an adjudstable cosine power law of illumination falloff to simulate the vignetting of light intensities at the backplate of the camera.\n\nWill match <b>natural vignetting</b> quite wit the <i>Cosine Power</i> set to 4, but can be tweaked to better simulate <b>optical</b> and <b>pixel vignetting</b> as well.\n\n<b>Natural vignetting</b> is due to both the reduced facing ratio of the light towards the edges of the image plane, but also the longer distance from the aperture.\n<b>Optical vignetting</b> is caused by light fallof in the lens array, and will depend on the f-stop.\n<b>Pixel vignetting</b> is only present in images captured by digital sensors, and is due to the photocytes being partly occluded by their photon wells.\n\nMade by Andreas Bravin Karlsson at Ego Studios."
+ selected true
+ xpos -585
+ ypos 86
+ mapsize {0.22323049 0.5434782609}
+ addUserKnob {20 User}
+ addUserKnob {7 amount l "Vignetting Amount" t "The main control for how much vignetting you want to apply to the input. It does not actually affect the intensty or shape of the vignetting, but rather the scale." R 0 2}
+ amount 1
+ addUserKnob {7 scale l INVISIBLE +INVISIBLE}
+ scale {{curve(power)*0.66667 i x0.75 1.626378655 s-0.2800000012 t-0.2524000108 x0.8299999833 1.60968591 x1 1.569776177 x2 1.333517 1.161717 1.039437 0.948077 0.876817 0.819357 0.771787 0.7316 0.69706 0.66697535 0.6404553 0.6168653 0.59568715 0.57655818 0.55914327 0.54322287 0.52859122 0.51506885 0.50254}}
+ addUserKnob {7 power l "Cosine Power" t "Controls the falloff of the vignette. Higher values will give softer results.\n\nA value of 4 is consistent with the theoretical model of <b>natural vignetting</b> alone, but empirical testing shows that a values between 1 and 3 (3 being the default) will generally yield a better match to photographical images with both <b>natural</b> and <b>optical vignetting</b> (if present). In these cases you will probably have to tweak the <i>Radial Gamma</i> a bit.\n\nIncreasing the <i>Cosine Power</i> beyond 10 makes little difference." R 1 7}
+ power 4
+ addUserKnob {7 radialGamma l "Radial Gamma" t "Will affect the radial values underlying the vignetting algorithm. It does not apply a gamma operation to the colors of the image (see the <i>Gamma</i> slider under <i>Vignettig Effects</i> for such an option)\n\nIs used for secondary corrections, mainly to adjust for <b>optical vignetting</b> (if any), which does not comply with the simple cosine fourth law of illumination falloff, used so successfully for <b>natural vignetting</b>.\n\nThere are no simple models for <b>optical vignetting</b>, but if you need to match the vignetting of existing footage, this gamma parameter can often get you fairly close." R 0 2}
+ radialGamma 1
+ addUserKnob {26 ""}
+ addUserKnob {7 aspect l "Aspect Ratio Weight" t "This is not the actual aspect ratio of the appplied vignette! Use as follows:\n\n<b>0</b> will yield a square vignette, which is physically correct for all undistorted (square pixel) image formats.\n\n<b>1</b> will give you a vignette with the same aspect ratio as the input image. This is never physically correct (unless the picture is square, in which this parameter does nothing), but can be used for artistic purposes.\n\nAny value between 0 and 1 will give you a weighted average between the two scenarios above. Values beyond 0 and 1 are also possible, for more extreme aspect ratios."}
+ addUserKnob {14 offset l "Center Offset" t "Adjusts the optical center of the lens.\n\nUseful if the input has been re-racked or assymetrically cropped in any way." R 0 100}
+ offset {0 0}
+ addUserKnob {26 ""}
+ addUserKnob {20 effects l "Vignetting Effects" t "Under this group, you can control what effect the vignetting will have on your image." n 1}
+ effects 0
+ addUserKnob {41 channels l "Affected Channels" t "Select which channels should have the vignetting effects applied to them.\n\nDefault is RGB only." T KeepAffected.channels}
+ addUserKnob {19 gain l Gain t "Scales the intensities in proportion to the vignetting. Can be used to reduce/increase the effect of the vignetting, or to tint the colours, but should be left at 0 (default) for physically plausible results.\n\nUse the <i>Vignetting Amount</i> property above for more realistic means of adjusting the intensity of the vignetting effect.\n\nYou can use values higher than 1 to remove vignetting from an image rather than adding it." R 0 4}
+ gain {0 0 0 0}
+ addUserKnob {6 gain_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {19 colorGamma l Gamma t "Controls the gamma of colors in the vignetted areas. Used for creative purposes, and should be left at 1 (default) for physically plausible results.\n\nOnly has an effect when <i>Gain</i> is set to a non-zero value." R 0 4}
+ colorGamma 1
+ addUserKnob {6 colorGamma_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {19 saturation l Saturation t "saturation\nControls the saturation of colors in the vignetted areas. Used for creative purposes, and should generally be left at 1 (default) for physically plausible results.\n\nFor this to have any noticable effect, the gain must have a non-zero value (raising it just a little bit should be enough)." R 0 4}
+ saturation 1
+ addUserKnob {6 saturation_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 blur l Blur t "Will add a gradual defocus effect towards the edges." R 0 20}
+ addUserKnob {6 addChannel l "Add vignetting channel" t "Output the vignetting amount to a channel named \"vignette.a\", for further use downstream." +STARTLINE}
+ addChannel true
+ addUserKnob {20 endGroup n -1}
+}
+ Input {
+  inputs 0
+  name img
+  xpos -456
+  ypos -235
+ }
+set N289243b0 [stack 0]
+add_layer {vignette vignette.a}
+ Radial {
+  output vignette
+  cliptype bbox
+  invert true
+  area {{"(width/2+offset.w) - lerp( max(width,height)/1.42, width/1.41, aspect)" x50 -9} {"(height/2+offset.h) - lerp( max(width,height)/1.42, height/1.41, aspect)" x50 -198} {"(width/2+offset.w) + lerp( max(width,height)/1.42, width/1.41, aspect)" x50 558.3758865} {"(height/2+offset.h) + lerp( max(width,height)/1.42, height/1.41, aspect)" x50 511.2198582}}
+  name RadialRamp
+  xpos -289
+  ypos -241
+ }
+ Expression {
+  channel3 vignette
+  expr3 "1-clamp(pow (cos (min( (pow(vignette.a,radialGamma)*amount*scale), pi()/2)) ,power))"
+  name VignetteExpression
+  xpos -289
+  ypos -162
+ }
+ ColorCorrect {
+  saturation {{parent.saturation*5 i}}
+  gamma {{parent.colorGamma.main i}}
+  gain {{parent.gain.main i}}
+  shadows 0
+  midtones 0
+  highlights 0
+  maskChannelInput vignette.a
+  name VignetteGrading
+  xpos -289
+  ypos -79
+ }
+ ZBlur {
+  Zchan vignette.a
+  math linear
+  size {{parent.blur.main i}}
+  max_size {{size.main i}}
+  shape 1
+  name VignetteBlur
+  xpos -289
+  ypos -37
+ }
+set N288cbb70 [stack 0]
+push $N288cbb70
+ Remove {
+  operation keep
+  channels rgb
+  name KeepAffected
+  xpos -367
+  ypos 42
+ }
+push $N289243b0
+ Copy {
+  inputs 2
+  channels all
+  name CopyAffected
+  xpos -456
+  ypos 106
+ }
+ Copy {
+  inputs 2
+  from0 vignette.a
+  to0 vignette.a
+  name CopyVignetteA
+  xpos -289
+  ypos 188
+  disable {{1-parent.addChannel i}}
+ }
+ Output {
+  name Output1
+  xpos -289
+  ypos 269
+ }
+end_group
