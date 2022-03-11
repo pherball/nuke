@@ -1,0 +1,48 @@
+set cut_paste_input [stack 0]
+version 13.0 v1
+push $cut_paste_input
+Expression {
+ expr3 "ceil(a*divisions)/divisions == ceil((frame%1)*divisions)/divisions"
+ name Expression4
+ selected true
+ xpos 4176
+ ypos 858
+ addUserKnob {20 User}
+ addUserKnob {7 divisions}
+ divisions {{parent.TimeBlur4.divisions-1}}
+}
+Dot {
+ name Dot6
+ selected true
+ xpos 4210
+ ypos 953
+}
+push 0
+Merge2 {
+ inputs 2
+ operation mask
+ name Merge4
+ selected true
+ xpos 4426
+ ypos 950
+}
+TimeBlur {
+ shutter 0.999
+ shutteroffset start
+ shuttercustomoffset 0
+ name TimeBlur4
+ selected true
+ xpos 4426
+ ypos 1024
+ addUserKnob {20 User}
+ addUserKnob {7 decimalFrameStepped l "decimal frame stepped"}
+ decimalFrameStepped {{ceil((frame%1)*divisions)/divisions}}
+}
+Multiply {
+ channels rgba
+ value {{parent.TimeBlur4.divisions}}
+ name Multiply4
+ selected true
+ xpos 4426
+ ypos 1048
+}
