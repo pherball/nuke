@@ -5,6 +5,16 @@
 # v2.2
 #----------------------------------------------------------------------------------------------------------
 
+
+# W_SCALETREE INSTALLATION GUIDE
+# 
+# 1 Copy ‘W_scaleTree.py' to a folder that's part of the nuke plugin path.
+#   
+# 2 Append menu.py with the following code:
+# 
+# import W_scaleTree
+# nuke.menu('Nuke').addCommand('Edit/Node/W_scaleTree', 'W_scaleTree.scaleTreeFloatingPanel()', 'alt+`')
+
 import nuke
 import os
 from nukescripts import panels
